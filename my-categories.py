@@ -1,8 +1,9 @@
 # Libraries
 import mysql.connector
-import sqlite3
 import random
 
+from components.game import play_game
+from components.round import play_round
 
 def create_connection():
     connection = None
@@ -39,49 +40,8 @@ def get_categories(connection):
         print(f"Error fetching categories: {e}")
         return []  # Return an empty list in case of error
 
-def play_round(category, num_players):
-    print(f"\nPlaying round in category: {category}")
-    scores = [random.randint(0, 10) for _ in range(num_players)]
 
-    for i in range(num_players):
-        print(f"Player {i + 1} Score: {scores[i]}")
 
-    max_score = max(scores)
-    winners = [f"Player {i + 1}" for i, score in enumerate(scores) if score == max_score]
-
-    return winners, scores
-
-def play_game(connection, num_rounds, num_players):
-    total_scores = [0] * num_players
-    categories = get_categories(connection)
-
-    if not categories:  # Handle the case where no categories are returned
-        print("No categories available in the database.")
-        return
-
-    for round_number in range(1, num_rounds + 1):
-        category = random.choice(categories)  # Randomly select a category for the round
-        print(f"\n--- Round {round_number} ---")
-        winners, round_scores = play_round(category, num_players)
-
-        for i in range(num_players):
-            total_scores[i] += round_scores[i]
-
-        for winner in winners:
-            print(f"{winner} wins this round!")
-
-    # Output final results
-    print("\nGame Over!")
-    for i in range(num_players):
-        print(f"Player {i + 1} Total Score: {total_scores[i]}")
-
-    max_total_score = max(total_scores)
-    overall_winners = [f"Player {i + 1}" for i, score in enumerate(total_scores) if score == max_total_score]
-
-    if len(overall_winners) > 1:
-        print("Overall Result: It's a tie between " + ", ".join(overall_winners) + "!")
-    else:
-        print(f"Overall Winner: {overall_winners[0]}!")
 
 # Main game function with input handling
 try:
@@ -99,6 +59,10 @@ finally:
 #Distinguish who plays and win
 #Distinguish who should be eliminated to the game
 #Distinguish who is using the same word or answer
+
+#For elimination round
+#word not in the category
+#no answer
 
 
 
@@ -120,5 +84,12 @@ finally:
 # Scoring:
 # Players earn points based on how many rounds they survive. The longer you stay in the game, the more points you accumulate.
 
+#Bug
+#The winner from the first round kay not right to print sa database instead random sya
+#For the play_round kay instead mu ingon sya nga eliminated na gi pa try again. Samoka uii
+#for the last 2 player standing, aside sa sila duha ra unta mag duwa sa database kay mitungha si
+#player 6 huhuhu
+#The problem is the players from the database
 
-#Distinguish who wins and who plays
+#eliminated first round
+#ply 4
